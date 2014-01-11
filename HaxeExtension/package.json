@@ -1,0 +1,12 @@
+{
+    "name": "as3boyan.haxe-extension",
+    "title": "Haxe Extension",
+    "description": "Adds Haxe support. Work in progress.",
+    "homepage": "https://github.com/as3boyan/Brackets-Haxe",
+    "version": "1.0.0",
+    "author": "as3boyan <as3boyan@gmail.com> (http://your.url)",
+    "license": "MIT",
+    "engines": {
+        "brackets": ">=0.24.0"
+    }
+}

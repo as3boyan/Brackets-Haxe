@@ -23,26 +23,61 @@ brackets_externs.extensions.Extension.prototype = {
 		return this._require(moduleName);
 	}
 };
-var HelloWorldExtension = function() {
+var HaxeExtension = function() {
 	brackets_externs.extensions.Extension.call(this);
 };
-HelloWorldExtension.__super__ = brackets_externs.extensions.Extension;
-HelloWorldExtension.prototype = $extend(brackets_externs.extensions.Extension.prototype,{
+HaxeExtension.__super__ = brackets_externs.extensions.Extension;
+HaxeExtension.prototype = $extend(brackets_externs.extensions.Extension.prototype,{
 	initialize: function() {
 		brackets_externs.extensions.Extension.prototype.initialize.call(this);
 		var commandManager = brackets_externs.Brackets.getModule("command/CommandManager");
 		var menus = brackets_externs.Brackets.getModule("command/Menus");
-		commandManager.register("Hello World","helloworld.sayhello",$bind(this,this.handleHelloWorld));
-		var menu = menus.getMenu(menus.AppMenuBar.FILE_MENU);
-		menu.addMenuItem("helloworld.sayhello");
+		commandManager.register("New...","haxe.project.new",$bind(this,this.newProject));
+		commandManager.register("Open","haxe.project.open",$bind(this,this.openProject));
+		commandManager.register("Build","haxe.project.build",$bind(this,this.buildProject));
+		commandManager.register("Run","haxe.project.run",$bind(this,this.runProject));
+		commandManager.register("Configure...","haxe.project.configure",$bind(this,this.configureProject));
+		var menu = menus.addMenu("Project","haxe.project","","");
+		menu.addMenuItem("haxe.project.new");
+		menu.addMenuItem("haxe.project.open");
+		menu.addMenuItem("haxe.project.build");
+		menu.addMenuItem("haxe.project.run");
+		menu.addMenuItem("haxe.project.configure");
 	}
-	,handleHelloWorld: function() {
-		window.alert("Hello, world!");
+	,newProject: function() {
+		var f = ($_=window,$bind($_,$_.alert));
+		function() {
+			return f("New");
+		};
+	}
+	,openProject: function() {
+		var f = ($_=window,$bind($_,$_.alert));
+		function() {
+			return f("Open");
+		};
+	}
+	,buildProject: function() {
+		var f = ($_=window,$bind($_,$_.alert));
+		function() {
+			return f("Build");
+		};
+	}
+	,runProject: function() {
+		var f = ($_=window,$bind($_,$_.alert));
+		function() {
+			return f("Run");
+		};
+	}
+	,configureProject: function() {
+		var f = ($_=window,$bind($_,$_.alert));
+		function() {
+			return f("Configure");
+		};
 	}
 });
 var Main = function() { };
 Main.main = function() {
-	var extension = new HelloWorldExtension();
+	var extension = new HaxeExtension();
 };
 brackets_externs.Brackets = function() {
 };
@@ -78,6 +113,10 @@ var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 var q = window.jQuery;
 js.JQuery = q;
-HelloWorldExtension.MYCOMMAND_ID = "helloworld.sayhello";
+HaxeExtension.PROJECT_NEW_ID = "haxe.project.new";
+HaxeExtension.PROJECT_OPEN_ID = "haxe.project.open";
+HaxeExtension.PROJECT_BUILD_ID = "haxe.project.build";
+HaxeExtension.PROJECT_RUN_ID = "haxe.project.run";
+HaxeExtension.PROJECT_CONFIGURE_ID = "haxe.project.configure";
 Main.main();
 })();

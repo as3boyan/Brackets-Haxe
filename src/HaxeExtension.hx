@@ -15,19 +15,25 @@ import js.Browser;
  * @author Hugo Campos <hcfields@gmail.com> (www.hccampos.net)
  */
 class HaxeExtension extends Extension {
-    private static inline var MYCOMMAND_ID = "helloworld.sayhello";
+    private static inline var PROJECT_NEW_ID = "haxe.project.new";
+	private static inline var PROJECT_OPEN_ID = "haxe.project.open";
+	private static inline var PROJECT_BUILD_ID = "haxe.project.build";
+	private static inline var PROJECT_RUN_ID = "haxe.project.run";
+	private static inline var PROJECT_CONFIGURE_ID = "haxe.project.configure";
 
     /**
      * Constructor.
      */
-    public function new() {
+    public function new() 
+	{
         super();
     }
 
     /**
      * Initializes the extension.
      */
-    override public function initialize():Void {
+    override public function initialize():Void 
+	{
         super.initialize();
 
         // Get the modules we will need.
@@ -36,18 +42,47 @@ class HaxeExtension extends Extension {
 
         // Register our command with brackets so it will know about it when we click the
         // menu item which will be created below.
-        commandManager.register("Hello World", MYCOMMAND_ID, this.handleHelloWorld);
+        commandManager.register("New...", PROJECT_NEW_ID, newProject);
+		commandManager.register("Open", PROJECT_OPEN_ID, openProject);
+		commandManager.register("Build", PROJECT_BUILD_ID, buildProject);
+		commandManager.register("Run", PROJECT_RUN_ID, runProject);
+		commandManager.register("Configure...", PROJECT_CONFIGURE_ID, configureProject);
 
         // Create a new menu item in the file menu and associate it with the command we created above.
-        var menu:Menu = menus.getMenu(menus.AppMenuBar.FILE_MENU);
-        menu.addMenuItem(MYCOMMAND_ID);
+        var menu:Menu = menus.addMenu("Project", "haxe.project", "", "");
+        menu.addMenuItem(PROJECT_NEW_ID);
+		menu.addMenuItem(PROJECT_OPEN_ID);
+		menu.addMenuItem(PROJECT_BUILD_ID);
+		menu.addMenuItem(PROJECT_RUN_ID);
+		menu.addMenuItem(PROJECT_CONFIGURE_ID);
     }
 
     /**
      * Method which will be called when the user clicks the menu item that the extension
      * creates in the file menu.
      */
-    public function handleHelloWorld():Void {
-        Browser.window.alert("Hello, world!");
+    public function newProject():Void 
+	{
+		Browser.window.alert.bind("New");
+    }
+	
+	 public function openProject():Void 
+	{
+		Browser.window.alert.bind("Open");
+    }
+	
+	 public function buildProject():Void 
+	{
+		Browser.window.alert.bind("Build");
+    }
+	
+	 public function runProject():Void 
+	{
+		Browser.window.alert.bind("Run");
+    }
+	
+	 public function configureProject():Void 
+	{
+		Browser.window.alert.bind("Configure");
     }
 }
