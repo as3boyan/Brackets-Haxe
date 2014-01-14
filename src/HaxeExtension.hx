@@ -5,6 +5,7 @@ import brackets.command.CommandManager;
 import brackets.command.Menu;
 import brackets.command.Menus;
 import brackets.extensions.Extension;
+import brackets.filesystem.FileSystem;
 import js.Browser;
 
 /**
@@ -20,6 +21,7 @@ class HaxeExtension extends Extension {
 	private static inline var PROJECT_BUILD_ID = "haxe.project.build";
 	private static inline var PROJECT_RUN_ID = "haxe.project.run";
 	private static inline var PROJECT_CONFIGURE_ID = "haxe.project.configure";
+	var filesystem:FileSystem;
 
     /**
      * Constructor.
@@ -55,6 +57,8 @@ class HaxeExtension extends Extension {
 		menu.addMenuItem(PROJECT_BUILD_ID);
 		menu.addMenuItem(PROJECT_RUN_ID);
 		menu.addMenuItem(PROJECT_CONFIGURE_ID);
+		
+		filesystem = Brackets.getModule("filesystem/FileSystem");
     }
 
     /**
@@ -63,26 +67,30 @@ class HaxeExtension extends Extension {
      */
     public function newProject():Void 
 	{
-		Browser.window.alert.bind("New");
+		Browser.window.alert("New");
     }
 	
-	 public function openProject():Void 
-	{
-		Browser.window.alert.bind("Open");
+	public function openProject():Void 
+	{		
+		filesystem.showOpenDialog(false, false, "Open Project", "", null, function (error, list):Void
+		{
+			
+		}
+		);
     }
 	
 	 public function buildProject():Void 
 	{
-		Browser.window.alert.bind("Build");
+		Browser.window.alert("Build");
     }
 	
 	 public function runProject():Void 
 	{
-		Browser.window.alert.bind("Run");
+		Browser.window.alert("Run");
     }
 	
 	 public function configureProject():Void 
 	{
-		Browser.window.alert.bind("Configure");
+		Browser.window.alert("Configure");
     }
 }

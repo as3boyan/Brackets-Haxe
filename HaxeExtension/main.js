@@ -43,36 +43,23 @@ HaxeExtension.prototype = $extend(brackets_externs.extensions.Extension.prototyp
 		menu.addMenuItem("haxe.project.build");
 		menu.addMenuItem("haxe.project.run");
 		menu.addMenuItem("haxe.project.configure");
+		this.filesystem = brackets_externs.Brackets.getModule("filesystem/FileSystem");
 	}
 	,newProject: function() {
-		var f = ($_=window,$bind($_,$_.alert));
-		function() {
-			return f("New");
-		};
+		window.alert("New");
 	}
 	,openProject: function() {
-		var f = ($_=window,$bind($_,$_.alert));
-		function() {
-			return f("Open");
-		};
+		this.filesystem.showOpenDialog(false,false,"Open Project","",null,function(error,list) {
+		});
 	}
 	,buildProject: function() {
-		var f = ($_=window,$bind($_,$_.alert));
-		function() {
-			return f("Build");
-		};
+		window.alert("Build");
 	}
 	,runProject: function() {
-		var f = ($_=window,$bind($_,$_.alert));
-		function() {
-			return f("Run");
-		};
+		window.alert("Run");
 	}
 	,configureProject: function() {
-		var f = ($_=window,$bind($_,$_.alert));
-		function() {
-			return f("Configure");
-		};
+		window.alert("Configure");
 	}
 });
 var Main = function() { };

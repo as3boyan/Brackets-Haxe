@@ -24,7 +24,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="False" />
-    <option additional="-cp libs/brackets-hx-externs/src" />
+    <option additional="-cp libs/brackets-hx-externs/src&#xA;-cmd copy HaxeExtension\main.js %APPDATA%\Brackets\extensions\user\HaxeExtension\main.js" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -45,8 +45,8 @@
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
-    <option testMovie="Webserver" />
-    <option testMovieCommand="bin/index.html" />
+    <option testMovie="Custom" />
+    <option testMovieCommand="" />
   </options>
   <!-- Plugin storage -->
   <storage />

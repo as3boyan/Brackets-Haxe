@@ -2,3 +2,4 @@
 -js HaxeExtension/main.js
 -main Main
 -cp libs/brackets-hx-externs/src
+-cmd "copy HaxeExtension\main.js %APPDATA%\Brackets\extensions\user\HaxeExtension\main.js"
