@@ -6,6 +6,7 @@ import brackets.command.Menu;
 import brackets.command.Menus;
 import brackets.extensions.Extension;
 import brackets.filesystem.FileSystem;
+import brackets.filesystem.File;
 import js.Browser;
 
 /**
@@ -22,6 +23,7 @@ class HaxeExtension extends Extension {
 	private static inline var PROJECT_RUN_ID = "haxe.project.run";
 	private static inline var PROJECT_CONFIGURE_ID = "haxe.project.configure";
 	var filesystem:FileSystem;
+	var file:File;
 
     /**
      * Constructor.
@@ -59,6 +61,7 @@ class HaxeExtension extends Extension {
 		menu.addMenuItem(PROJECT_CONFIGURE_ID);
 		
 		filesystem = Brackets.getModule("filesystem/FileSystem");
+		file = Brackets.getModule("filesystem/File"); 
     }
 
     /**
@@ -74,7 +77,12 @@ class HaxeExtension extends Extension {
 	{		
 		filesystem.showOpenDialog(false, false, "Open Project", "", null, function (error, list):Void
 		{
-			
+			//filesystem.getFileForPath(list[0]).read({}, function (err, data, stat):Void
+			//{
+				//trace(data);
+				//trace(stat);
+			//}
+			//);
 		}
 		);
     }

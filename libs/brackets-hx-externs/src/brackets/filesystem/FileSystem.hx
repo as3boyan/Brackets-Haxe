@@ -19,4 +19,9 @@ extern class FileSystem
 		
 	}
 	
+	public function getFileForPath(path:String):File
+	{
+		
+	}
+	
 }

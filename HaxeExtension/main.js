@@ -44,12 +44,18 @@ HaxeExtension.prototype = $extend(brackets_externs.extensions.Extension.prototyp
 		menu.addMenuItem("haxe.project.run");
 		menu.addMenuItem("haxe.project.configure");
 		this.filesystem = brackets_externs.Brackets.getModule("filesystem/FileSystem");
+		this.file = brackets_externs.Brackets.getModule("filesystem/File");
 	}
 	,newProject: function() {
 		window.alert("New");
 	}
 	,openProject: function() {
+		var _g = this;
 		this.filesystem.showOpenDialog(false,false,"Open Project","",null,function(error,list) {
+			_g.filesystem.getFileForPath(list[0]).read({ },function(err,data,stat) {
+				console.log(data);
+				console.log(stat);
+			});
 		});
 	}
 	,buildProject: function() {

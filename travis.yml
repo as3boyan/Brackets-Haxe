@@ -1,0 +1,17 @@
+language: node_js
+node_js: ["0.11"]
+
+# Install Haxe
+before_script:
+    - sudo apt-get install python-software-properties -y # for the next command
+    - sudo add-apt-repository ppa:eyecreate/haxe -y      # add the ubuntu ppa that contains haxe
+    - sudo apt-get update                                # pull info from ppa
+    - sudo apt-get install haxe -y
+    - mkdir ~/haxelib                                    # create a folder for installing haxelib
+    - haxelib setup ~/haxelib
+
+script:
+    - haxe Brackets-Haxe-Extension.hxml
+
+notifications:
+    email: false
