@@ -7,6 +7,10 @@ import brackets.command.Menus;
 import brackets.extensions.Extension;
 import brackets.filesystem.FileSystem;
 import brackets.filesystem.File;
+import brackets.project.ProjectManager;
+import brackets.file.FileUtils;
+import brackets.utils.NodeConnection;
+import brackets.utils.ExtensionUtils;
 import js.Browser;
 
 /**
@@ -14,7 +18,11 @@ import js.Browser;
  * 
  * https://github.com/adobe/brackets/wiki/Simple-%22Hello-World%22-extension
  *
- * @author Hugo Campos <hcfields@gmail.com> (www.hccampos.net)
+ * @author AS3BoyanHugo Campos <hcfields@gmail.com> (www.hccampos.net)
+ */
+
+/**
+ * @author AS3Boyan
  */
 class HaxeExtension extends Extension {
     private static inline var PROJECT_NEW_ID = "haxe.project.new";
@@ -24,6 +32,9 @@ class HaxeExtension extends Extension {
 	private static inline var PROJECT_CONFIGURE_ID = "haxe.project.configure";
 	var filesystem:FileSystem;
 	var file:File;
+	var fileutils:FileUtils;
+	var projectManager:ProjectManager;
+	var nodeConnection:NodeConnection;
 
     /**
      * Constructor.
@@ -43,7 +54,9 @@ class HaxeExtension extends Extension {
         // Get the modules we will need.
         var commandManager:CommandManager = Brackets.getModule("command/CommandManager");
         var menus:Menus = Brackets.getModule("command/Menus");
-
+		projectManager = Brackets.getModule("project/ProjectManager");
+		fileutils = Brackets.getModule("file/FileUtils");
+		
         // Register our command with brackets so it will know about it when we click the
         // menu item which will be created below.
         commandManager.register("New...", PROJECT_NEW_ID, newProject);
@@ -61,7 +74,21 @@ class HaxeExtension extends Extension {
 		menu.addMenuItem(PROJECT_CONFIGURE_ID);
 		
 		filesystem = Brackets.getModule("filesystem/FileSystem");
-		file = Brackets.getModule("filesystem/File"); 
+		file = Brackets.getModule("filesystem/File");
+		var extensionUtils:ExtensionUtils = Brackets.getModule("utils/ExtensionUtils");
+		nodeConnection = Brackets.getModule("utils/NodeConnection");
+		
+		var nodeCon = untyped __js__("new nodeConnection()");
+		
+		nodeCon.connect(true)
+			.done(function () {
+				nodeCon.loadDomains([extensionUtils.getModulePath(module, "node/CompileHaxe")], true);
+			})
+			.fail(function () 
+			{
+				trace("starting node module error"); 
+			} 
+			);
     }
 
     /**
@@ -77,6 +104,24 @@ class HaxeExtension extends Extension {
 	{		
 		filesystem.showOpenDialog(false, false, "Open Project", "", null, function (error, list):Void
 		{
+			var extension:String = fileutils.getFileExtension(list[0]);
+			
+			switch (extension) 
+			{
+				case "hxml":
+				case "xml":
+					
+				default:
+					
+			}
+			
+			//trace(projectManager);
+			
+			var path:String = fileutils.convertWindowsPathToUnixPath(list[0]);
+			projectManager.openProject(fileutils.getDirectoryPath(path));
+			
+			trace(extension);
+			
 			//filesystem.getFileForPath(list[0]).read({}, function (err, data, stat):Void
 			//{
 				//trace(data);

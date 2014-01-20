@@ -10,8 +10,9 @@ brackets_externs.extensions = {};
 brackets_externs.extensions.IExtension = function() { };
 brackets_externs.extensions.Extension = function() {
 	var _g = this;
-	brackets_externs.Brackets.define(function(require,exports,module) {
+	brackets_externs.Brackets.define(function(require,exports,p_module) {
 		_g._require = require;
+		_g.module = p_module;
 		_g.initialize();
 	});
 };
@@ -29,9 +30,12 @@ var HaxeExtension = function() {
 HaxeExtension.__super__ = brackets_externs.extensions.Extension;
 HaxeExtension.prototype = $extend(brackets_externs.extensions.Extension.prototype,{
 	initialize: function() {
+		var _g = this;
 		brackets_externs.extensions.Extension.prototype.initialize.call(this);
 		var commandManager = brackets_externs.Brackets.getModule("command/CommandManager");
 		var menus = brackets_externs.Brackets.getModule("command/Menus");
+		this.projectManager = brackets_externs.Brackets.getModule("project/ProjectManager");
+		this.fileutils = brackets_externs.Brackets.getModule("file/FileUtils");
 		commandManager.register("New...","haxe.project.new",$bind(this,this.newProject));
 		commandManager.register("Open","haxe.project.open",$bind(this,this.openProject));
 		commandManager.register("Build","haxe.project.build",$bind(this,this.buildProject));
@@ -45,6 +49,14 @@ HaxeExtension.prototype = $extend(brackets_externs.extensions.Extension.prototyp
 		menu.addMenuItem("haxe.project.configure");
 		this.filesystem = brackets_externs.Brackets.getModule("filesystem/FileSystem");
 		this.file = brackets_externs.Brackets.getModule("filesystem/File");
+		var extensionUtils = brackets_externs.Brackets.getModule("utils/ExtensionUtils");
+		this.nodeConnection = brackets_externs.Brackets.getModule("utils/NodeConnection");
+		var nodeCon = new nodeConnection();
+		nodeCon.connect(true).done(function() {
+			nodeCon.loadDomains([extensionUtils.getModulePath(_g.module,"node/CompileLatex")],true);
+		}).fail(function() {
+			console.log("starting node module error");
+		});
 	}
 	,newProject: function() {
 		window.alert("New");
@@ -52,10 +64,17 @@ HaxeExtension.prototype = $extend(brackets_externs.extensions.Extension.prototyp
 	,openProject: function() {
 		var _g = this;
 		this.filesystem.showOpenDialog(false,false,"Open Project","",null,function(error,list) {
-			_g.filesystem.getFileForPath(list[0]).read({ },function(err,data,stat) {
-				console.log(data);
-				console.log(stat);
-			});
+			var extension = _g.fileutils.getFileExtension(list[0]);
+			switch(extension) {
+			case "hxml":
+				break;
+			case "xml":
+				break;
+			default:
+			}
+			var path = _g.fileutils.convertWindowsPathToUnixPath(list[0]);
+			_g.projectManager.openProject(_g.fileutils.getDirectoryPath(path));
+			console.log(extension);
 		});
 	}
 	,buildProject: function() {
