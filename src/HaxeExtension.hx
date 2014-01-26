@@ -9,8 +9,9 @@ import brackets.filesystem.FileSystem;
 import brackets.filesystem.File;
 import brackets.project.ProjectManager;
 import brackets.file.FileUtils;
-import brackets.utils.NodeConnection;
+//import brackets.utils.NodeConnection;
 import brackets.utils.ExtensionUtils;
+import brackets.utils.AppInit;
 import js.Browser;
 
 /**
@@ -34,7 +35,8 @@ class HaxeExtension extends Extension {
 	var file:File;
 	var fileutils:FileUtils;
 	var projectManager:ProjectManager;
-	var nodeConnection:NodeConnection;
+	var NodeConnection:brackets.utils.NodeConnection;
+	var extensionUtils:ExtensionUtils;
 
     /**
      * Constructor.
@@ -51,7 +53,7 @@ class HaxeExtension extends Extension {
 	{
         super.initialize();
 
-        // Get the modules we will need.
+		 // Get the modules we will need.
         var commandManager:CommandManager = Brackets.getModule("command/CommandManager");
         var menus:Menus = Brackets.getModule("command/Menus");
 		projectManager = Brackets.getModule("project/ProjectManager");
@@ -75,22 +77,34 @@ class HaxeExtension extends Extension {
 		
 		filesystem = Brackets.getModule("filesystem/FileSystem");
 		file = Brackets.getModule("filesystem/File");
-		var extensionUtils:ExtensionUtils = Brackets.getModule("utils/ExtensionUtils");
-		nodeConnection = Brackets.getModule("utils/NodeConnection");
+		extensionUtils = Brackets.getModule("utils/ExtensionUtils");
+		NodeConnection = Brackets.getModule("utils/NodeConnection");
 		
-		var nodeCon = untyped __js__("new nodeConnection()");
+		var appInit:AppInit = Brackets.getModule("utils/AppInit");
+		appInit.appReady(appLoaded);
+    }
+
+	public function appLoaded():Void
+	{		
+		var nodeCon = untyped __js__("new this.NodeConnection()");
 		
 		nodeCon.connect(true)
 			.done(function () {
 				nodeCon.loadDomains([extensionUtils.getModulePath(module, "node/CompileHaxe")], true);
+				trace(nodeCon);
+				nodeCon.domains.simple.getMemory().done(function (memory)
+				{
+					trace(memory);
+				}
+				);
 			})
 			.fail(function () 
 			{
 				trace("starting node module error"); 
 			} 
 			);
-    }
-
+	}
+	
     /**
      * Method which will be called when the user clicks the menu item that the extension
      * creates in the file menu.

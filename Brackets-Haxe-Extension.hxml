@@ -3,3 +3,10 @@
 -main Main
 -cp libs/brackets-hx-externs/src
 -cmd "copy HaxeExtension\main.js %APPDATA%\Brackets\extensions\user\HaxeExtension\main.js"
+--next
+-main CompileHaxe
+-js HaxeExtension/node/CompileHaxe.js
+-cp src
+-cp libs/brackets-hx-externs/src
+-cp libs/nodejs-std/src
+-cmd "copy HaxeExtension\node\CompileHaxe.js %APPDATA%\Brackets\extensions\user\HaxeExtension\node\CompileHaxe.js"

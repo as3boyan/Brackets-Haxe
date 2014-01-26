@@ -24,7 +24,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="False" />
-    <option additional="-cp libs/brackets-hx-externs/src&#xA;-cmd copy HaxeExtension\main.js %APPDATA%\Brackets\extensions\user\HaxeExtension\main.js" />
+    <option additional="-cp libs/brackets-hx-externs/src&#xA;-cmd copy HaxeExtension\main.js %APPDATA%\Brackets\extensions\user\HaxeExtension\main.js&#xA;--next&#xA;-main CompileHaxe&#xA;-js HaxeExtension/node/CompileHaxe.js&#xA;-cp src&#xA;-cp libs/brackets-hx-externs/src&#xA;-cp libs/nodejs-std/src&#xA;-cmd copy HaxeExtension\node\CompileHaxe.js %APPDATA%\Brackets\extensions\user\HaxeExtension\node\CompileHaxe.js" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
