@@ -1,4 +1,5 @@
 package ;
+import js.Node;
 
 /**
  * ...
@@ -12,33 +13,51 @@ class CompileHaxe
 {
 
 	public static function main() 
-	{
-		var init = function (DomainManager:brackets.DomainManager)
-		{
-			if (!DomainManager.hasDomain("Haxe")) 
-			{
-				DomainManager.registerDomain("Haxe", {major: 0, minor: 1});
-			}
-			
-			DomainManager.registerCommand(
-            "Haxe",       // domain name
-            "compileHxml",    // command name
-            compileHxml,   // command handler function
-            false,          // this command is synchronous
-            "Compiles hxml files",
-            [],             // no parameters
-            [{name: "data",
-                type: "{error: number, code: number}",
-                description: "exit code and error description"}]
-			);
-		};
-		
-		untyped __js__("exports.init = init");
+	{		
+		untyped __js__("exports.init = this.init");
 	}
 	
-	private static function compileHxml() 
+	private static function init(DomainManager:brackets.DomainManager)
 	{
+		if (!DomainManager.hasDomain("Haxe")) 
+		{
+			DomainManager.registerDomain("Haxe", {major: 0, minor: 1});
+		}
 		
+		DomainManager.registerCommand(
+		"Haxe",       // domain name
+		"exec",    // command name
+		exec,   // command handler function
+		true,          // this command is synchronous
+		"Compiles hxml files",
+		[ 
+		{
+			name: "path",
+			type: "string",
+			description: ""
+		},
+		{
+			name: "command",
+			type: "string",
+			description: ""
+		}
+		],             // no parameters
+		[
+		{
+			name: "data",
+			type: "fn(error, stdout: string, stderr: string)",
+			description: ""
+		} ]
+		);
+	}
+	
+	private static function exec(path:String, command:String, onComplete:Dynamic)
+	{		
+		js.Node.childProcess.exec(command, { cwd: path }, function (error, stdout, stderr)
+		{
+			onComplete(error, {error: error, stdout: stdout, stderr: stderr});
+		}
+		);
 	}
 	
 }

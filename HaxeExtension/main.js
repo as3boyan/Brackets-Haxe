@@ -57,18 +57,45 @@ HaxeExtension.prototype = $extend(brackets_externs.extensions.Extension.prototyp
 	,newProject: function() {
 		js.Browser.window.alert("New");
 	}
-	,appLoaded: function() {
+	,chain: function(p_functions) {
 		var _g = this;
-		var nodeCon = new this.NodeConnection();
-		nodeCon.connect(true).done(function() {
-			nodeCon.loadDomains([_g.extensionUtils.getModulePath(_g.module,"node/CompileHaxe")],true);
-			console.log(nodeCon);
-			nodeCon.domains.simple.getMemory().done(function(memory) {
-				console.log(memory);
+		var functions = p_functions.slice();
+		if(functions.length > 0) {
+			var firstFunction = functions.shift();
+			var firstPromise = firstFunction();
+			firstPromise.done(function() {
+				_g.chain(functions);
 			});
-		}).fail(function() {
-			console.log("starting node module error");
+		}
+	}
+	,exec: function() {
+		var execPromise = this.nodeConnection.domains.Haxe.exec("","haxe");
+		execPromise.fail(function(err) {
+			console.log(err);
 		});
+		execPromise.done(function(data) {
+			console.log(data);
+		});
+		return execPromise;
+	}
+	,loadSimpleDomain: function() {
+		var path = this.extensionUtils.getModulePath(this.module,"node/CompileHaxe");
+		var loadPromise = this.nodeConnection.loadDomains([path],true);
+		loadPromise.fail(function() {
+			console.log("[brackets-simple-node] failed to load domain");
+		});
+		return loadPromise;
+	}
+	,connect: function() {
+		var connectionPromise = this.nodeConnection.connect(true);
+		connectionPromise.fail(function() {
+			console.log("[brackets-simple-node] failed to connect to node");
+		});
+		return connectionPromise;
+	}
+	,appLoaded: function() {
+		this.nodeConnection = Type.createInstance(this.NodeConnection,[]);
+		this.chain([$bind(this,this.connect),$bind(this,this.loadSimpleDomain),$bind(this,this.exec)]);
 	}
 	,initialize: function() {
 		brackets_externs.extensions.Extension.prototype.initialize.call(this);
@@ -98,6 +125,32 @@ HaxeExtension.prototype = $extend(brackets_externs.extensions.Extension.prototyp
 var Main = function() { }
 Main.main = function() {
 	var extension = new HaxeExtension();
+}
+var Type = function() { }
+Type.createInstance = function(cl,args) {
+	switch(args.length) {
+	case 0:
+		return new cl();
+	case 1:
+		return new cl(args[0]);
+	case 2:
+		return new cl(args[0],args[1]);
+	case 3:
+		return new cl(args[0],args[1],args[2]);
+	case 4:
+		return new cl(args[0],args[1],args[2],args[3]);
+	case 5:
+		return new cl(args[0],args[1],args[2],args[3],args[4]);
+	case 6:
+		return new cl(args[0],args[1],args[2],args[3],args[4],args[5]);
+	case 7:
+		return new cl(args[0],args[1],args[2],args[3],args[4],args[5],args[6]);
+	case 8:
+		return new cl(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]);
+	default:
+		throw "Too many arguments";
+	}
+	return null;
 }
 brackets_externs.Brackets = function() {
 };

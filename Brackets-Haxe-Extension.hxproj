@@ -16,6 +16,8 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
+    <class path="libs\brackets-hx-externs\src" />
+    <class path="libs\nodejs-std\src" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -24,7 +26,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="False" />
-    <option additional="-cp libs/brackets-hx-externs/src&#xA;-cmd copy HaxeExtension\main.js %APPDATA%\Brackets\extensions\user\HaxeExtension\main.js&#xA;--next&#xA;-main CompileHaxe&#xA;-js HaxeExtension/node/CompileHaxe.js&#xA;-cp src&#xA;-cp libs/brackets-hx-externs/src&#xA;-cp libs/nodejs-std/src&#xA;-cmd copy HaxeExtension\node\CompileHaxe.js %APPDATA%\Brackets\extensions\user\HaxeExtension\node\CompileHaxe.js" />
+    <option additional="-cp libs/brackets-hx-externs/src&#xA;-cmd copy HaxeExtension\main.js ..\www\extensions\dev\HaxeExtension\main.js&#xA;--next&#xA;-main CompileHaxe&#xA;-js HaxeExtension/node/CompileHaxe.js&#xA;-cp src&#xA;-cp libs/brackets-hx-externs/src&#xA;-cp libs/nodejs-std/src&#xA;-cmd copy HaxeExtension\node\CompileHaxe.js ..\www\extensions\dev\HaxeExtension\node\CompileHaxe.js" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -46,7 +48,7 @@
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Custom" />
-    <option testMovieCommand="" />
+    <option testMovieCommand="run.bat" />
   </options>
   <!-- Plugin storage -->
   <storage />

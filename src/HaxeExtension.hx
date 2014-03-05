@@ -9,6 +9,7 @@ import brackets.filesystem.FileSystem;
 import brackets.filesystem.File;
 import brackets.project.ProjectManager;
 import brackets.file.FileUtils;
+import js.Lib;
 //import brackets.utils.NodeConnection;
 import brackets.utils.ExtensionUtils;
 import brackets.utils.AppInit;
@@ -35,8 +36,9 @@ class HaxeExtension extends Extension {
 	var file:File;
 	var fileutils:FileUtils;
 	var projectManager:ProjectManager;
-	var NodeConnection:brackets.utils.NodeConnection;
+	var NodeConnection:Dynamic;
 	var extensionUtils:ExtensionUtils;
+	var nodeConnection:Dynamic;
 
     /**
      * Constructor.
@@ -86,23 +88,65 @@ class HaxeExtension extends Extension {
 
 	public function appLoaded():Void
 	{		
-		var nodeCon = untyped __js__("new this.NodeConnection()");
+		nodeConnection = Type.createInstance(NodeConnection, []);
 		
-		nodeCon.connect(true)
-			.done(function () {
-				nodeCon.loadDomains([extensionUtils.getModulePath(module, "node/CompileHaxe")], true);
-				trace(nodeCon);
-				nodeCon.domains.simple.getMemory().done(function (memory)
-				{
-					trace(memory);
-				}
-				);
-			})
-			.fail(function () 
+		chain([connect, loadSimpleDomain, exec]);
+	}
+	
+	private function connect()
+	{
+		var connectionPromise = nodeConnection.connect(true);
+		connectionPromise.fail(function ()
+		{
+			trace("[brackets-simple-node] failed to connect to node");
+		}
+		);
+		return connectionPromise;
+	}
+	
+	private function loadSimpleDomain()
+	{
+		var path = extensionUtils.getModulePath(module, "node/CompileHaxe");
+		var loadPromise = nodeConnection.loadDomains([path], true);
+		loadPromise.fail(function () {
+			trace("[brackets-simple-node] failed to load domain");
+		});
+		return loadPromise;
+	}
+	
+	private function exec()
+	{
+		var execPromise = nodeConnection.domains.Haxe.exec("", "haxe");
+		
+		execPromise.fail(function (err)
+		{
+			trace(err);
+		}
+		);
+		
+		execPromise.done(function (data)
+		{
+			trace(data);
+		}
+		);
+		
+		return execPromise;
+	}
+	
+	private function chain(p_functions:Array<Dynamic>)
+	{
+		var functions:Array<Dynamic> = p_functions.copy();
+		
+		if (functions.length > 0)
+		{
+			var firstFunction = functions.shift();
+			var firstPromise = firstFunction();
+			firstPromise.done(function ()
 			{
-				trace("starting node module error"); 
-			} 
+				chain(functions);
+			}
 			);
+		}
 	}
 	
     /**

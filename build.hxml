@@ -1,0 +1,10 @@
+-cp src
+-js HaxeExtension/main.js
+-main Main
+-cp libs/brackets-hx-externs/src
+--next
+-main CompileHaxe
+-js HaxeExtension/node/CompileHaxe.js
+-cp src
+-cp libs/brackets-hx-externs/src
+-cp libs/nodejs-std/src
